@@ -1,3 +1,5 @@
+Note - If the web app doesn't work or it says that Authentication failed, I would have revoked the API Key until then.
+
 1. To write a Dockerfile in the root directory of the project. This file contains instructions for building your Docker image.
 2. To create a new repository on GitHub for the project.
 To create a .github/workflows/main.yml file in the project repository to define the CI/CD workflow. This file contains the steps for linting, testing, building, pushing, and deploying the Docker image.
