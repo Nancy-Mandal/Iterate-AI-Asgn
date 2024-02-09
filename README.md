@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+1. To write a Dockerfile in the root directory of the project. This file contains instructions for building your Docker image.
+2. To create a new repository on GitHub for the project.
+To create a .github/workflows/main.yml file in the project repository to define the CI/CD workflow. This file contains the steps for linting, testing, building, pushing, and deploying the Docker image.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+3. Code  
+name: CI/CD Pipeline
 
-## Available Scripts
+on:
+  push:
+    branches:
+      - main
 
-In the project directory, you can run:
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-### `npm start`
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+      - name: Lint and test code
+        run: |
+          # Add commands for linting and testing
+          # Example: npm run lint && npm test
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+      - name: Build Docker image
+        run: docker build -t your-image-name .
 
-### `npm test`
+      - name: Push Docker image to registry
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker tag your-image-name your-registry-url/your-image-name
+          docker push your-registry-url/your-image-name
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+      - name: Deploy to test environment
+        run: |
+          # Add commands to deploy the Docker container to your test environment
+          # Example: docker-compose up -d
 
-### `npm run build`
+4. To add the Docker registry username and password as secrets in my GitHub repository settings. These secrets will be used to authenticate when pushing the Docker image to the registry.
+5. Chosen a Docker registry (e.g., Docker Hub, GitHub Container Registry, AWS ECR) to host the Docker images.
+6. To set up a test environment (e.g., staging server, cloud service) where my Docker containers can be deployed.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Linting and Testing Code:
+- name: Lint and test code
+  run: |
+    npm run lint
+    npm test
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Pushing Docker Image to Registry
+- name: Push Docker image to registry
+  run: |
+    docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    docker tag your-image-name your-registry-url/your-image-name
+    docker push your-registry-url/your-image-name
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Deploying to Test Environment
+- name: Deploy to test environment
+  run: |
+    docker-compose up -d
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Complete GitHub Actions Workflow
 
-## Learn More
+name: CI/CD Pipeline
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+on:
+  push:
+    branches:
+      - main
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-### Code Splitting
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+      - name: Lint and test code
+        run: |
+          npm run lint
+          npm test
 
-### Analyzing the Bundle Size
+      - name: Build Docker image
+        run: docker build -t your-image-name .
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+      - name: Push Docker image to registry
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker tag your-image-name your-registry-url/your-image-name
+          docker push your-registry-url/your-image-name
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+      - name: Deploy to test environment
+        run: |
+          docker-compose up -d
